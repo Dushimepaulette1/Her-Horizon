@@ -138,10 +138,13 @@ const hamburger = document.querySelector(".hamburger");
 const navMenu = document.querySelector(".nav-menu");
 const backToTop = document.getElementById("backToTop");
 
+// Import AOS library
+const AOS = window.AOS;
+
 // Initialize the application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize AOS (Animate On Scroll)
-  if (typeof AOS !== "undefined") {
+  if (AOS) {
     AOS.init({
       duration: 800,
       easing: "ease-in-out",
@@ -285,7 +288,7 @@ function displayOpportunities(opportunities) {
     .join("");
 
   // Re-initialize AOS for new elements
-  if (typeof AOS !== "undefined") {
+  if (AOS) {
     AOS.refresh();
   }
 }
