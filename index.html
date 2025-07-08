@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HerHorizon - Discover Opportunities. Shape Your Future.</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <h2>HerHorizon</h2>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="#home" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#about" class="nav-link">About</a>
+          </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link">Contact</a>
+          </li>
+        </ul>
+        <div class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">HerHorizon</h1>
+          <p class="hero-tagline">Discover Opportunities. Shape Your Future.</p>
+          <p class="hero-description">
+            Empowering young women in Rwanda with access to scholarships,
+            internships, mentorships, and skills training opportunities.
+          </p>
+          <a href="#opportunities" class="cta-button">Explore Opportunities</a>
+        </div>
+        <div class="hero-image">
+          <i class="fas fa-graduation-cap hero-icon"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opportunities Section -->
+    <section id="opportunities" class="opportunities">
+      <div class="container">
+        <h2 class="section-title">Available Opportunities</h2>
+
+        <!-- Search and Filter Controls -->
+        <div class="search-filter-container">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search opportunities..."
+            />
+          </div>
+          <div class="filter-box">
+            <select id="categoryFilter">
+              <option value="all">All Categories</option>
+              <option value="Education">Education</option>
+              <option value="Skills">Skills</option>
+              <option value="Career">Career</option>
+              <option value="Mentorship">Mentorship</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Opportunities Grid -->
+        <div id="opportunitiesGrid" class="opportunities-grid">
+          <!-- Opportunities will be loaded here by JavaScript -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading opportunities...</p>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="no-results" style="display: none">
+          <i class="fas fa-search"></i>
+          <p>No opportunities found matching your criteria.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+      <div class="container">
+        <h2 class="section-title">About HerHorizon</h2>
+        <div class="about-content">
+          <div class="about-text">
+            <p>
+              HerHorizon is dedicated to empowering young women in Rwanda by
+              providing easy access to life-changing opportunities. We believe
+              every woman deserves the chance to pursue her dreams and build a
+              bright future.
+            </p>
+            <p>
+              Our platform connects you with scholarships, internships,
+              mentorship programs, and skills training opportunities from
+              trusted organizations and institutions.
+            </p>
+          </div>
+          <div class="about-stats">
+            <div class="stat">
+              <h3>500+</h3>
+              <p>Opportunities Listed</p>
+            </div>
+            <div class="stat">
+              <h3>1000+</h3>
+              <p>Women Empowered</p>
+            </div>
+            <div class="stat">
+              <h3>50+</h3>
+              <p>Partner Organizations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+      <div class="container">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-content">
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <p>info@herhorizon.rw</p>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <p>+250 123 456 789</p>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <p>Kigali, Rwanda</p>
+            </div>
+          </div>
+          <div class="contact-form">
+            <form>
+              <input type="text" placeholder="Your Name" required />
+              <input type="email" placeholder="Your Email" required />
+              <textarea placeholder="Your Message" rows="5" required></textarea>
+              <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>HerHorizon</h3>
+            <p>
+              Empowering young women in Rwanda through opportunities and
+              education.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#opportunities">Opportunities</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 HerHorizon. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
