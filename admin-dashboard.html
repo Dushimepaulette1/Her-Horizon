@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HerHorizon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .admin-nav a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .admin-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .admin-logout {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .admin-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .opportunities-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .add-opportunity-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-opportunity-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-search {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .admin-search:focus {
+            border-color: #667eea;
+        }
+
+        .admin-filter {
+            padding: 12px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .admin-filter:focus {
+            border-color: #667eea;
+        }
+
+        .opportunities-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .opportunities-table th,
+        .opportunities-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .opportunities-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .edit-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #218838;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Delete Modal */
+        .delete-modal-content {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .delete-modal-content i {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+
+        .delete-modal-content h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .delete-modal-content p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .delete-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .confirm-delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .admin-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-controls {
+                flex-direction: column;
+            }
+
+            .opportunities-table {
+                font-size: 0.8rem;
+            }
+
+            .opportunities-table th,
+            .opportunities-table td {
+                padding: 0.5rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="admin-logo">
+                <h2><i class="fas fa-shield-alt"></i> HerHorizon Admin</h2>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> View Site
+                </a>
+                <button id="adminLogout" class="admin-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-container">
+        <!-- Dashboard Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3 id="totalOpportunities">0</h3>
+                <p>Total Opportunities</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="educationCount">0</h3>
+                <p>Education</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="careerCount">0</h3>
+                <p>Career</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="skillsCount">0</h3>
+                <p>Skills</p>
+            </div>
+        </div>
+
+        <!-- Opportunities Management -->
+        <div class="opportunities-section">
+            <div class="section-header">
+                <h2 class="section-title">Manage Opportunities</h2>
+                <button id="addOpportunityBtn" class="add-opportunity-btn">
+                    <i class="fas fa-plus"></i>
+                    Add New Opportunity
+                </button>
+            </div>
+
+            <!-- Admin Controls -->
+            <div class="admin-controls">
+                <input type="text" id="adminSearchInput" class="admin-search" placeholder="Search opportunities...">
+                <select id="adminCategoryFilter" class="admin-filter">
+                    <option value="all">All Categories</option>
+                    <option value="Education">Education</option>
+                    <option value="Skills">Skills</option>
+                    <option value="Career">Career</option>
+                    <option value="Mentorship">Mentorship</option>
+                </select>
+            </div>
+
+            <!-- Opportunities Table -->
+            <table class="opportunities-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Deadline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="opportunitiesTableBody">
+                    <!-- Table content will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Opportunity Modal -->
+    <div id="opportunityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="modal-title">Add New Opportunity</h3>
+                <button id="closeModal" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="opportunityForm">
+                <input type="hidden" id="opportunityId">
+                
+                <div class="form-group">
+                    <label for="opportunityTitle">Title *</label>
+                    <input type="text" id="opportunityTitle" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="opportunityCategory">Category *</label>
+                    <select id="opportunityCategory" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Education">Education</option>
+                        <option value="Skills">Skills</option>
+                        <option value="Career">Career</option>
+                        <option value="Mentorship">Mentorship</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="opportunityDescription">Description *</label>
+                    <textarea id="opportunityDescription" name="description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="opportunityDeadline">Deadline *</label>
+                    <input type="text" id="opportunityDeadline" name="deadline" placeholder="e.g., March 15, 2024" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="opportunityUrl">Application URL *</label>
+                    <input type="url" id="opportunityUrl" name="applyUrl" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancelBtn" class="cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" id="saveBtn" class="save-btn">
+                        <i class="fas fa-save"></i> Save Opportunity
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="delete-modal-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirm Delete</h3>
+                <p>Are you sure you want to delete this opportunity? This action cannot be undone.</p>
+                <div class="delete-actions">
+                    <button id="cancelDelete" class="cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button id="confirmDelete" class="confirm-delete-btn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>
