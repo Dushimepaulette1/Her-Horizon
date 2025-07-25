@@ -1,6 +1,3 @@
-// Admin dashboard functionality
-
-// Check admin authentication on page load
 document.addEventListener("DOMContentLoaded", () => {
   if (!isAdminLoggedIn()) {
     window.location.href = "admin-login.html";
