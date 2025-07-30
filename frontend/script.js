@@ -1,72 +1,5 @@
-// Enhanced opportunities data - this will be updated by admin
-let opportunitiesData = [];
-
-// Load opportunities from localStorage or use defaults
-function loadOpportunitiesData() {
-  const savedData = localStorage.getItem("herhorizon_opportunities");
-  if (savedData) {
-    try {
-      opportunitiesData = JSON.parse(savedData);
-    } catch (e) {
-      opportunitiesData = getDefaultOpportunities();
-    }
-  } else {
-    opportunitiesData = getDefaultOpportunities();
-  }
-}
-
-// Default opportunities data
-function getDefaultOpportunities() {
-  return [
-    {
-      id: 1,
-      title: "MasterCard Foundation Scholars Program",
-      category: "Education",
-      description:
-        "Full scholarship program for academically talented yet economically disadvantaged young people from Africa to pursue undergraduate and graduate studies at leading universities worldwide.",
-      deadline: "March 15, 2024",
-      applyUrl: "https://mastercardfdn.org/scholars/",
-    },
-    {
-      id: 2,
-      title: "Google Women Techmakers Program",
-      category: "Skills",
-      description:
-        "A program that provides visibility, community, and resources for women in technology to drive innovation and participation in the field through workshops, mentorship, and networking.",
-      deadline: "April 30, 2024",
-      applyUrl: "https://developers.google.com/womentechmakers",
-    },
-    {
-      id: 3,
-      title: "UN Women Rwanda Internship",
-      category: "Career",
-      description:
-        "Internship opportunity with UN Women Rwanda to support gender equality and women's empowerment initiatives in the country. Gain hands-on experience in development work.",
-      deadline: "February 28, 2024",
-      applyUrl: "https://www.unwomen.org/en/about-us/employment",
-    },
-    {
-      id: 4,
-      title: "She Code Africa Mentorship Program",
-      category: "Mentorship",
-      description:
-        "A mentorship program connecting young African women with experienced professionals in technology and entrepreneurship. Includes career guidance and skill development.",
-      deadline: "May 20, 2024",
-      applyUrl: "https://shecodeafrica.org/mentorship",
-    },
-    {
-      id: 5,
-      title: "YALI Regional Leadership Center",
-      category: "Skills",
-      description:
-        "Leadership development program for young African leaders focusing on business, civic leadership, and public management. Includes networking opportunities and practical training.",
-      deadline: "June 10, 2024",
-      applyUrl: "https://yali.state.gov/rlc/",
-    },
-  ];
-}
-
 // Global variables
+let opportunitiesData = [];
 let filteredOpportunities = [];
 let currentFilter = "all";
 let currentSearch = "";
@@ -86,10 +19,23 @@ const backToTop = document.getElementById("backToTop");
 const AOS = window.AOS;
 
 // Initialize the application when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  // Load opportunities data first
-  loadOpportunitiesData();
-  filteredOpportunities = [...opportunitiesData];
+document.addEventListener("DOMContentLoaded", async () => {
+  showLoading();
+
+  try {
+    // Fetch opportunities from backend API
+    const response = await fetch("http://localhost:5000/api/opportunities");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    opportunitiesData = await response.json();
+    filteredOpportunities = [...opportunitiesData];
+  } catch (error) {
+    console.error("Failed to load opportunities:", error);
+    showNotification("Failed to load opportunities from server.", "error");
+    opportunitiesData = [];
+    filteredOpportunities = [];
+  }
 
   // Initialize AOS (Animate On Scroll)
   if (AOS) {
@@ -101,12 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Simulate loading delay for better UX
-  setTimeout(() => {
-    hideLoading();
-    displayOpportunities(opportunitiesData);
-    animateCounters();
-  }, 1500);
+  hideLoading();
+
+  displayOpportunities(filteredOpportunities);
+  animateCounters();
 
   // Set up event listeners
   setupEventListeners();
@@ -122,63 +66,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Setup contact form
   setupContactForm();
-
-  // Check for data updates periodically (in case admin makes changes)
-  setInterval(checkForDataUpdates, 5000);
 });
-
-// Check for data updates from admin
-function checkForDataUpdates() {
-  const savedData = localStorage.getItem("herhorizon_opportunities");
-  if (savedData) {
-    try {
-      const newData = JSON.parse(savedData);
-      if (JSON.stringify(newData) !== JSON.stringify(opportunitiesData)) {
-        opportunitiesData = newData;
-        filterAndDisplayOpportunities();
-      }
-    } catch (e) {
-      // Handle error silently
-    }
-  }
-}
 
 // Set up all event listeners
 function setupEventListeners() {
-  // Search functionality
   if (searchInput) {
     searchInput.addEventListener("input", handleSearch);
   }
 
-  // Filter functionality
   if (categoryFilter) {
     categoryFilter.addEventListener("change", handleFilter);
   }
 
-  // Mobile menu toggle
   if (hamburger && navMenu) {
     hamburger.addEventListener("click", toggleMobileMenu);
   }
 
-  // Close mobile menu when clicking on nav links
   document.querySelectorAll(".nav-link").forEach((link) => {
     link.addEventListener("click", closeMobileMenu);
   });
 
-  // Back to top button
   if (backToTop) {
     window.addEventListener("scroll", toggleBackToTop);
     backToTop.addEventListener("click", scrollToTop);
   }
 
-  // Navbar scroll effect
   window.addEventListener("scroll", handleNavbarScroll);
 
-  // Intersection Observer for animations
   setupIntersectionObserver();
 }
 
-// Handle search functionality
+// Handle search input
 function handleSearch(e) {
   currentSearch = e.target.value.toLowerCase().trim();
   filterAndDisplayOpportunities();
@@ -208,7 +126,7 @@ function filterAndDisplayOpportunities() {
   displayOpportunities(filteredOpportunities);
 }
 
-// Display opportunities in the grid
+// Display opportunities
 function displayOpportunities(opportunities) {
   if (!opportunitiesGrid) return;
 
@@ -228,9 +146,9 @@ function displayOpportunities(opportunities) {
             <p class="opportunity-description">${opportunity.description}</p>
             <div class="opportunity-deadline">
                 <i class="fas fa-calendar-alt"></i>
-                <span>Deadline: ${opportunity.deadline}</span>
+                <span>Deadline: ${opportunity.date}</span>
             </div>
-            <a href="${opportunity.applyUrl}" target="_blank" rel="noopener noreferrer" class="apply-button">
+            <a href="${opportunity.link}" target="_blank" rel="noopener noreferrer" class="apply-button">
                 <span>Apply Now</span>
                 <i class="fas fa-external-link-alt"></i>
             </a>
@@ -239,22 +157,21 @@ function displayOpportunities(opportunities) {
     )
     .join("");
 
-  // Refresh AOS for new elements
   if (AOS) {
     AOS.refresh();
   }
 }
 
-// Show/hide loading state
-function hideLoading() {
-  if (loading) {
-    loading.style.display = "none";
-  }
-}
-
+// Show/hide loading spinner
 function showLoading() {
   if (loading) {
     loading.style.display = "block";
+  }
+}
+
+function hideLoading() {
+  if (loading) {
+    loading.style.display = "none";
   }
 }
 
@@ -277,12 +194,11 @@ function hideNoResults() {
   }
 }
 
-// Mobile menu functionality
+// Mobile menu toggle
 function toggleMobileMenu() {
   hamburger.classList.toggle("active");
   navMenu.classList.toggle("active");
 
-  // Animate hamburger bars
   const bars = hamburger.querySelectorAll(".bar");
   bars.forEach((bar, index) => {
     if (hamburger.classList.contains("active")) {
@@ -302,7 +218,6 @@ function closeMobileMenu() {
   hamburger.classList.remove("active");
   navMenu.classList.remove("active");
 
-  // Reset hamburger bars
   const bars = hamburger.querySelectorAll(".bar");
   bars.forEach((bar) => {
     bar.style.transform = "none";
@@ -310,7 +225,7 @@ function closeMobileMenu() {
   });
 }
 
-// Back to top functionality
+// Back to top button
 function toggleBackToTop() {
   if (window.pageYOffset > 300) {
     backToTop.classList.add("show");
@@ -338,14 +253,14 @@ function handleNavbarScroll() {
   }
 }
 
-// Smooth scrolling for navigation links
+// Smooth scrolling for nav links
 function setupSmoothScrolling() {
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault();
       const target = document.querySelector(this.getAttribute("href"));
       if (target) {
-        const offsetTop = target.offsetTop - 80; // Account for fixed navbar
+        const offsetTop = target.offsetTop - 80;
         window.scrollTo({
           top: offsetTop,
           behavior: "smooth",
@@ -355,23 +270,18 @@ function setupSmoothScrolling() {
   });
 }
 
-// View toggle functionality
+// View toggle (grid/list)
 function setupViewToggle() {
   const viewButtons = document.querySelectorAll(".view-btn");
 
   viewButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
-      // Remove active class from all buttons
       viewButtons.forEach((b) => b.classList.remove("active"));
-
-      // Add active class to clicked button
       this.classList.add("active");
 
-      // Get view type
       const viewType = this.getAttribute("data-view");
       currentView = viewType;
 
-      // Update grid class
       if (opportunitiesGrid) {
         if (viewType === "list") {
           opportunitiesGrid.classList.add("list-view");
@@ -383,14 +293,14 @@ function setupViewToggle() {
   });
 }
 
-// Counter animation
+// Animate counters (if any)
 function animateCounters() {
   const counters = document.querySelectorAll(".stat-number");
 
   counters.forEach((counter) => {
     const target = Number.parseInt(counter.getAttribute("data-count"));
     const duration = 2000; // 2 seconds
-    const step = target / (duration / 16); // 60fps
+    const step = target / (duration / 16);
     let current = 0;
 
     const timer = setInterval(() => {
@@ -414,13 +324,11 @@ function setupNewsletterForm() {
 
       const email = this.querySelector('input[type="email"]').value;
 
-      // Show success message
       showNotification(
         "Thank you for subscribing! You'll receive updates about new opportunities.",
         "success"
       );
 
-      // Reset form
       this.reset();
     });
   }
@@ -434,21 +342,17 @@ function setupContactForm() {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Show loading state
       const submitBtn = this.querySelector(".submit-btn");
       const originalText = submitBtn.innerHTML;
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
       submitBtn.disabled = true;
 
-      // Simulate form submission
       setTimeout(() => {
-        // Show success message
         showNotification(
           "Thank you for your message! We'll get back to you soon.",
           "success"
         );
 
-        // Reset form and button
         this.reset();
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
@@ -459,80 +363,61 @@ function setupContactForm() {
 
 // Notification system
 function showNotification(message, type = "info") {
-  // Remove existing notifications
   const existingNotification = document.querySelector(".notification");
   if (existingNotification) {
     existingNotification.remove();
   }
 
-  // Create notification element
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${
-              type === "success"
-                ? "fa-check-circle"
-                : type === "error"
-                ? "fa-exclamation-circle"
-                : "fa-info-circle"
-            }"></i>
-            <span>${message}</span>
-            <button class="notification-close"><i class="fas fa-times"></i></button>
-        </div>
-    `;
+    <div class="notification-content">
+      <i class="fas ${
+        type === "success"
+          ? "fa-check-circle"
+          : type === "error"
+          ? "fa-exclamation-circle"
+          : "fa-info-circle"
+      }"></i>
+      <span>${message}</span>
+      <button class="notification-close"><i class="fas fa-times"></i></button>
+    </div>
+  `;
 
-  // Add styles
   notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${
-          type === "success"
-            ? "#d4edda"
-            : type === "error"
-            ? "#f8d7da"
-            : "#d1ecf1"
-        };
-        color: ${
-          type === "success"
-            ? "#155724"
-            : type === "error"
-            ? "#721c24"
-            : "#0c5460"
-        };
-        border: 1px solid ${
-          type === "success"
-            ? "#c3e6cb"
-            : type === "error"
-            ? "#f5c6cb"
-            : "#bee5eb"
-        };
-        padding: 1rem;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        z-index: 10000;
-        max-width: 400px;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-    `;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: ${
+      type === "success" ? "#d4edda" : type === "error" ? "#f8d7da" : "#d1ecf1"
+    };
+    color: ${
+      type === "success" ? "#155724" : type === "error" ? "#721c24" : "#0c5460"
+    };
+    border: 1px solid ${
+      type === "success" ? "#c3e6cb" : type === "error" ? "#f5c6cb" : "#bee5eb"
+    };
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    max-width: 400px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  `;
 
-  // Add to DOM
   document.body.appendChild(notification);
 
-  // Animate in
   setTimeout(() => {
     notification.style.transform = "translateX(0)";
   }, 100);
 
-  // Close functionality
   const closeBtn = notification.querySelector(".notification-close");
   closeBtn.addEventListener("click", () => {
     notification.style.transform = "translateX(100%)";
     setTimeout(() => notification.remove(), 300);
   });
 
-  // Auto remove after 5 seconds
   setTimeout(() => {
     if (notification.parentNode) {
       notification.style.transform = "translateX(100%)";
@@ -556,7 +441,6 @@ function setupIntersectionObserver() {
     });
   }, observerOptions);
 
-  // Observe elements with animation classes
   document
     .querySelectorAll(".fade-in, .slide-in-left, .slide-in-right, .zoom-in")
     .forEach((el) => {
@@ -564,35 +448,27 @@ function setupIntersectionObserver() {
     });
 }
 
-// Add notification styles
+// Notification styles
 const notificationStyle = document.createElement("style");
 notificationStyle.textContent = `
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
-        margin-left: auto;
-        color: inherit;
-    }
-    
-    .notification-close:hover {
-        opacity: 1;
-    }
+  .notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .notification-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    margin-left: auto;
+    color: inherit;
+  }
+
+  .notification-close:hover {
+    opacity: 1;
+  }
 `;
 document.head.appendChild(notificationStyle);
-
-// Export for potential use by admin system
-window.HerHorizonApp = {
-  opportunitiesData,
-  loadOpportunitiesData,
-  filterAndDisplayOpportunities,
-  showNotification,
-};

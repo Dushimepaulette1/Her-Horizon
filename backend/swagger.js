@@ -1,3 +1,4 @@
+// swagger.js
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -27,12 +28,12 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: [], // Manual definition
+  apis: [], // No external files used
 };
 
 const swaggerSpec = swaggerJsDoc(options);
 
-// Add API paths manually
+// Define API paths manually
 swaggerSpec.paths = {
   "/api/auth/login": {
     post: {
@@ -85,6 +86,8 @@ swaggerSpec.paths = {
       },
     },
   },
+
+  // Opportunities
   "/api/opportunities": {
     get: {
       tags: ["Opportunities"],
@@ -133,6 +136,61 @@ swaggerSpec.paths = {
       },
     },
   },
+  "/api/opportunities/{id}": {
+    put: {
+      tags: ["Opportunities"],
+      summary: "Update an opportunity by ID",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                category: { type: "string" },
+                title: { type: "string" },
+                description: { type: "string" },
+                date: { type: "string" },
+                link: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: { description: "Opportunity updated" },
+        404: { description: "Opportunity not found" },
+      },
+    },
+    delete: {
+      tags: ["Opportunities"],
+      summary: "Delete an opportunity by ID",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      responses: {
+        200: { description: "Opportunity deleted" },
+        404: { description: "Opportunity not found" },
+      },
+    },
+  },
+
+  // Testimonies
   "/api/testimonies": {
     get: {
       tags: ["Testimonies"],
@@ -166,11 +224,63 @@ swaggerSpec.paths = {
       },
     },
   },
+  "/api/testimonies/{id}": {
+    put: {
+      tags: ["Testimonies"],
+      summary: "Update a testimony by ID",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              type: "object",
+              properties: {
+                image: { type: "string", format: "binary" },
+                description: { type: "string" },
+                name: { type: "string" },
+                fieldOfStudy: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: { description: "Testimony updated" },
+        404: { description: "Testimony not found" },
+      },
+    },
+    delete: {
+      tags: ["Testimonies"],
+      summary: "Delete a testimony by ID",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "id",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      responses: {
+        200: { description: "Testimony deleted" },
+        404: { description: "Testimony not found" },
+      },
+    },
+  },
 };
 
 const setupSwaggerDocs = (app) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log(`📘 Swagger Docs: http://localhost:5000/api-docs`);
+  console.log(`📘 Swagger Docs available at: http://localhost:5000/api-docs`);
 };
 
 module.exports = setupSwaggerDocs;

@@ -1,11 +1,5 @@
 // Admin authentication functionality
 
-// Admin credentials (in a real app, this would be handled securely on the server)
-const ADMIN_CREDENTIALS = {
-  email: "admin@herhorizon.rw",
-  password: "admin123",
-};
-
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
   // Check if already logged in as admin
@@ -27,7 +21,7 @@ function setupAdminAuthEventListeners() {
 }
 
 // Handle admin login form submission
-function handleAdminLogin(e) {
+async function handleAdminLogin(e) {
   e.preventDefault();
 
   const formData = new FormData(e.target);
@@ -45,43 +39,49 @@ function handleAdminLogin(e) {
     return;
   }
 
-  // Show loading
   showLoadingOverlay("Verifying credentials...");
 
-  // Simulate API call
-  setTimeout(() => {
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
     hideLoadingOverlay();
 
-    // Check admin credentials
-    if (
-      email === ADMIN_CREDENTIALS.email &&
-      password === ADMIN_CREDENTIALS.password
-    ) {
-      // Store admin session
-      const adminData = {
-        email: email,
+    if (!response.ok) {
+      showAdminNotification(data.message || "Login failed", "error");
+      return;
+    }
+
+    // Save token and email/role info in localStorage
+    localStorage.setItem(
+      "herhorizon_admin",
+      JSON.stringify({
+        token: data.token, // JWT token from backend
+        email,
         role: "admin",
         loginTime: new Date().toISOString(),
-      };
+      })
+    );
 
-      localStorage.setItem("herhorizon_admin", JSON.stringify(adminData));
+    showAdminNotification(
+      "Welcome, Admin! Redirecting to dashboard...",
+      "success"
+    );
 
-      showAdminNotification(
-        "Welcome, Admin! Redirecting to dashboard...",
-        "success"
-      );
-
-      // Redirect to admin dashboard
-      setTimeout(() => {
-        window.location.href = "admin-dashboard.html";
-      }, 1500);
-    } else {
-      showAdminNotification(
-        "Invalid admin credentials. Please try again.",
-        "error"
-      );
-    }
-  }, 2000);
+    setTimeout(() => {
+      window.location.href = "admin-dashboard.html";
+    }, 1500);
+  } catch (err) {
+    hideLoadingOverlay();
+    showAdminNotification("Network error. Please try again.", "error");
+  }
 }
 
 // Password toggle functionality
@@ -112,7 +112,11 @@ function isAdminLoggedIn() {
   if (adminData) {
     try {
       const admin = JSON.parse(adminData);
-      return admin.role === "admin";
+      return (
+        admin.role === "admin" &&
+        typeof admin.token === "string" &&
+        admin.token.length > 0
+      );
     } catch (e) {
       return false;
     }
