@@ -17,6 +17,11 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
     />
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
   </head>
   <body>
     <!-- Navigation Bar -->
@@ -249,92 +254,75 @@
           </p>
         </div>
 
-        <div class="stories-grid">
-          <div class="story-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="story-image">
+        <div class="stories-scroll">
+          <div class="story-card">
+            <div class="story-author">
               <img
-                src="images/pexels-tima-miroshnichenko-6550171.jpg"
-                alt="Sarah's Success Story"
+                src="images/laurence-la-madeleine-1s99M0QYbF8-unsplash.jpg"
+                alt="Sarah Uwimana"
+                class="author-avatar"
               />
-            </div>
-            <div class="story-content">
-              <div class="story-quote">
-                <i class="fas fa-quote-left"></i>
-                <p>
-                  "HerHorizon connected me with a scholarship that changed my
-                  life. I'm now studying Computer Science at university!"
-                </p>
-              </div>
-              <div class="story-author">
-                <img
-                  src="images/laurence-la-madeleine-1s99M0QYbF8-unsplash.jpg"
-                  alt="Sarah Uwimana"
-                  class="author-avatar"
-                />
-                <div class="author-info">
-                  <h4>Sarah Uwimana</h4>
-                  <span>Computer Science Student</span>
-                </div>
+              <div class="author-info">
+                <h4>Sarah Uwimana</h4>
+                <span>Computer Science Student</span>
               </div>
             </div>
+            <p class="story-quote">
+              “HerHorizon connected me with a scholarship that changed my life.
+              I’m now studying Computer Science at university!”
+            </p>
           </div>
 
-          <div class="story-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="story-image">
+          <div class="story-card">
+            <div class="story-author">
               <img
-                src="images/pexels-cottonbro-5052868.jpg"
-                alt="Grace's Success Story"
+                src="images/pexels-israelzin-3724459.jpg"
+                alt="Grace Mukamana"
+                class="author-avatar"
               />
-            </div>
-            <div class="story-content">
-              <div class="story-quote">
-                <i class="fas fa-quote-left"></i>
-                <p>
-                  "Through the mentorship program I found here, I launched my
-                  own tech startup and now employ 10 people!"
-                </p>
-              </div>
-              <div class="story-author">
-                <img
-                  src="images/pexels-israelzin-3724459.jpg"
-                  alt="Grace Mukamana"
-                  class="author-avatar"
-                />
-                <div class="author-info">
-                  <h4>Grace Mukamana</h4>
-                  <span>Tech Entrepreneur</span>
-                </div>
+              <div class="author-info">
+                <h4>Grace Mukamana</h4>
+                <span>Tech Entrepreneur</span>
               </div>
             </div>
+            <p class="story-quote">
+              “Through the mentorship program I found here, I launched my own
+              tech startup and now employ 10 people!”
+            </p>
           </div>
-
-          <div class="story-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="story-image">
+          <div class="story-card">
+            <div class="story-author">
               <img
-                src="images/pexels-thirdman-7236726.jpg"
-                alt="Divine's Success Story"
+                src="images/pexels-israelzin-3724459.jpg"
+                alt="Grace Mukamana"
+                class="author-avatar"
               />
-            </div>
-            <div class="story-content">
-              <div class="story-quote">
-                <i class="fas fa-quote-left"></i>
-                <p>
-                  "The skills training I accessed through HerHorizon helped me
-                  secure my dream job at an international NGO."
-                </p>
-              </div>
-              <div class="story-author">
-                <img
-                  src="images/frank-ching-lDKiqe6i0YA-unsplash.jpg"
-                  alt="Divine Ingabire"
-                  class="author-avatar"
-                />
-                <div class="author-info">
-                  <h4>Divine Ingabire</h4>
-                  <span>Project Manager</span>
-                </div>
+              <div class="author-info">
+                <h4>Grace Mukamana</h4>
+                <span>Tech Entrepreneur</span>
               </div>
             </div>
+            <p class="story-quote">
+              “Through the mentorship program I found here, I launched my own
+              tech startup and now employ 10 people!”
+            </p>
+          </div>
+          <div class="story-card">
+            <div class="story-author">
+              <img
+                src="images/frank-ching-lDKiqe6i0YA-unsplash.jpg"
+                alt="Divine Ingabire"
+                class="author-avatar"
+              />
+              <div class="author-info">
+                <h4>Divine Ingabire</h4>
+                <span>Project Manager</span>
+              </div>
+            </div>
+            <p class="story-quote">
+              “The skills training I accessed through HerHorizon helped me
+              secure my dream job at an international NGO.”
+            </p>
           </div>
         </div>
       </div>
@@ -580,5 +568,24 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="script.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      const swiper = new Swiper(".mySwiper", {
+        loop: true,
+        spaceBetween: 30,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        autoplay: {
+          delay: 5000,
+        },
+      });
+    </script>
   </body>
 </html>
