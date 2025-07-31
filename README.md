@@ -1,151 +1,161 @@
-# HerHorizon
 
-**HerHorizon** is a web platform designed to empower young women by sharing curated opportunities in education, skills development, mentorship, and career growth. Built with a clean and responsive design, it allows users to explore available opportunities and provides an easy-to-use admin dashboard for managing content.
+---
 
-## Features
+# HerHorizon 🌸
 
-- View Opportunities categorized by Education, Skills, Career, and Mentorship.
-- Admin Dashboard to Add, Edit, and Delete opportunities.
-- Display dates in a clear, user-friendly format.
-- Responsive Design for mobile and desktop users.
-- Organized and professional codebase for easy collaboration and customization.
-## Project Structure
+**HerHorizon** is a full-stack web platform designed to empower young women by sharing curated opportunities in education, skills development, mentorship, and career growth. It features a clean user interface and an admin dashboard for content management.
+
+---
+
+## 🔗 Deployed Links
+
+* **Frontend:** [https://her-horizon-full.netlify.app/](https://her-horizon-full.netlify.app/)
+* **Backend (Swagger Docs):** [https://her-horizon.onrender.com/api-docs/](https://her-horizon.onrender.com/api-docs/)
+
+---
+
+## 📁 Project Structure
 
 ```
-
 herhorizon/
 ├── backend/
+│   ├── controllers/
+│   ├── middleware/
 │   ├── models/
-│   │   └── Opportunity.js
 │   ├── routes/
-│   │   └── admin-auth.js
+│   ├── uploads/
+│   ├── app.js
 │   ├── server.js
+│   ├── swagger.js
 │   └── ...
 ├── frontend/
 │   ├── index.html
-│   ├── style.css
-│   │
-│   ├── js/
-│   │   ├── admin-dashboard.js
-│   │   └── opportunity.js
+│   ├── admin-login.html
+│   ├── admin-dashboard.html
+│   ├── styles.css
+│   ├── script.js
 │   └── ...
-├── README.md
-└── package.json
-
 ```
 
 ---
 
-## Getting Started
+## 🛠️ Technologies Used
 
-Follow the steps below to run HerHorizon on your local machine.
-
-### Prerequisites
-
-- Node.js installed (v14 or later)
-- MongoDB installed and running locally (or MongoDB Atlas account)
+* **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
+* **Backend:** Node.js, Express.js, MongoDB, Swagger
+* **Deployment:** Netlify (Frontend), Render (Backend)
 
 ---
 
-## Backend Setup (Node.js + Express)
+## 🚀 Getting Started Locally
 
-1. Navigate to the backend folder:
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Dushimepaulette1/herhorizon.git
+cd herhorizon
+```
+
+---
+
+### 2. Set Up the Backend
 
 ```bash
 cd backend
 ```
 
-2. Install dependencies:
+#### a. Install dependencies
 
 ```bash
 npm install
 ```
 
-3. Create a `.env` file and add your MongoDB URI:
+#### b. Create a `.env` file
+
+Create a `.env` file in the `backend` directory and add:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/herhorizon
+MONGODB_URI=your_mongodb_connection_string
 PORT=5000
 ```
 
-4. Start the server:
+> If using MongoDB locally:
+> `MONGODB_URI=mongodb://localhost:27017/herhorizon`
+
+#### c. Run the server
 
 ```bash
 node server.js
 ```
 
-Your backend will run on [http://localhost:5000](http://localhost:5000)
+Backend should run on [http://localhost:5000](http://localhost:5000)
+
+Swagger Docs available at [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
 
 ---
 
-## Frontend Setup (HTML/CSS/JS)
+### 3. Set Up the Frontend
 
-1. Open `frontend/index.html` directly in a browser OR serve it using a live server extension.
+#### Option 1: Open locally
 
-2. Make sure the frontend uses the correct backend URL (e.g., `http://localhost:5000`) in your JavaScript fetch calls.
+Simply open `frontend/index.html` in a browser.
+
+#### Option 2: Use Live Server
+
+Use VS Code’s Live Server Extension to serve the project and enable smoother routing.
+
+> Ensure all `fetch()` API calls point to your backend URL:
+> `http://localhost:5000` for local
+> or
+> `https://her-horizon.onrender.com` for production
 
 ---
 
-## Test Data
+## 🧪 Admin Test Credentials (for Demo Purposes)
 
-To quickly test the platform:
+> *(Replace with actual if available or keep empty if not needed)*
+> Username: `admin@example.com`
+> Password: `admin123`
+---
+## ✨ Features
 
-- Use the admin dashboard to add opportunities.
-- Try editing and deleting opportunities.
-- Watch how they display in the main user view.
+* 📂 View opportunities by category: Education, Skills, Mentorship, and Career
+* 🔐 Admin login for content management (CRUD)
+* 📱 Responsive and clean design
+* 📊 Organized codebase for easy maintenance
+* 🧭 Swagger API documentation
 
 ---
 
-## How to Contribute
+## 🧰 How to Contribute
 
-We welcome contributions! Here’s how you can help:
-
-1. Fork this repo
-2. Create a new branch (`git checkout -b feature-name`)
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature-name`
 3. Make your changes
-4. Commit (`git commit -m 'Add new feature'`)
-5. Push to your branch (`git push origin feature-name`)
+4. Commit your work: `git commit -m "Add feature"`
+5. Push the branch: `git push origin feature-name`
 6. Open a Pull Request
 
-Please make sure your code follows our structure and is well-commented.
+---
+
+## 🧩 Future Improvements
+
+* User authentication (Sign Up / Login)
+* Bookmark & Save opportunities
+* Email alerts for new opportunities
+* Admin analytics dashboard
 
 ---
 
-## Screenshots
+## 📬 Contact
 
-> You can add screenshots here to show off your UI. Use markdown like below:
-
-```
-![HerHorizon Home](./frontend/images/screenshot-home.png)
-![Admin Dashboard](./frontend/images/screenshot-dashboard.png)
-```
+* **GitHub:** [@Dushimepaulette1](https://github.com/Dushimepaulette1)
+* **Email:** [p.dushime12@gmail.com](mailto:p.dushime12@gmail.com)
 
 ---
 
-## License
-
-## This project is open-source and free to use
-
-## Future Plans
-
-- Add user authentication (sign up, login)
-- Implement "Save Opportunity" feature
-- Enable email notifications for new opportunities
-- Enhance admin dashboard with analytics
+### 💖 Made with love by Paulette Dushime
 
 ---
 
-## Contact
 
-If you'd like to collaborate or have any questions:
-
-- GitHub: [@Dushimepaulette1](https://github.com/Dushimepaulette1)
-- Email: [p.dushime12@gmail.com](p.dushime12@email.com)
-
----
-
-Made by with Love By Paulette Dushime
-
-```
-
-```
