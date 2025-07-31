@@ -1,11 +1,6 @@
----
-
-```markdown
 # HerHorizon
 
 **HerHorizon** is a web platform designed to empower young women by sharing curated opportunities in education, skills development, mentorship, and career growth. Built with a clean and responsive design, it allows users to explore available opportunities and provides an easy-to-use admin dashboard for managing content.
-
----
 
 ## Features
 
@@ -14,9 +9,6 @@
 - Display dates in a clear, user-friendly format.
 - Responsive Design for mobile and desktop users.
 - Organized and professional codebase for easy collaboration and customization.
-
----
-
 ## Project Structure
 
 ```
