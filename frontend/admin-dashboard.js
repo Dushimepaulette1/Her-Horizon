@@ -53,7 +53,7 @@ function populateOpportunitiesTable(opps = adminOpportunities) {
       <td>${opp._id}</td>
       <td>${opp.title}</td>
       <td>${opp.category}</td>
-      <td>${opp.date ? new Date(opp.date).toLocaleDateString() : "N/A"}</td>
+      <td>${opp.formattedDate || "N/A"}</td>
       <td class="flex gap-2">
         <button
           onclick="editOpportunity('${opp._id}')"
