@@ -16,7 +16,9 @@ function initializeAdminDashboard() {
 
 async function fetchOpportunities() {
   try {
-    const response = await fetch("http://localhost:5000/api/opportunities");
+    const response = await fetch(
+      "https://her-horizon.onrender.com/api/opportunities"
+    );
     const data = await response.json();
     adminOpportunities = data;
     updateDashboardStats();
@@ -168,8 +170,8 @@ async function handleOpportunitySubmit(e) {
 
   try {
     const url = id
-      ? `http://localhost:5000/api/opportunities/${id}`
-      : "http://localhost:5000/api/opportunities";
+      ? `https://her-horizon.onrender.com/api/opportunities/${id}`
+      : "https://her-horizon.onrender.com/api/opportunities";
     const method = id ? "PUT" : "POST";
 
     const res = await fetch(url, {
@@ -211,7 +213,7 @@ async function confirmDeleteOpportunity() {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/opportunities/${currentDeleteId}`,
+      `https://her-horizon.onrender.com/api/opportunities/${currentDeleteId}`,
       {
         method: "DELETE",
         headers: {

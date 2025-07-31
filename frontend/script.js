@@ -24,7 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // Fetch opportunities from backend API
-    const response = await fetch("http://localhost:5000/api/opportunities");
+    const response = await fetch(
+      "https://her-horizon.onrender.com/api/opportunities"
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
