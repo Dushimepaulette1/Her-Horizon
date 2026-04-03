@@ -19,8 +19,6 @@ function setupAdminAuthEventListeners() {
     adminLoginForm.addEventListener("submit", handleAdminLogin);
   }
 }
-
-// Handle admin login form submission
 async function handleAdminLogin(e) {
   e.preventDefault();
 
@@ -28,7 +26,6 @@ async function handleAdminLogin(e) {
   const email = formData.get("email");
   const password = formData.get("password");
 
-  // Basic validation
   if (!email || !password) {
     showAdminNotification("Please fill in all fields.", "error");
     return;
