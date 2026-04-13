@@ -1,3 +1,6 @@
+// API config
+const API_BASE = "https://her-horizon.onrender.com/api";
+
 // Global variables
 let opportunitiesData = [];
 let filteredOpportunities = [];
@@ -8,7 +11,7 @@ let currentView = "grid";
 // DOM elements
 const opportunitiesGrid = document.getElementById("opportunitiesGrid");
 const searchInput = document.getElementById("searchInput");
-const categoryFilter = document.getElementById("categoryFilter");
+// category filter is handled by pill buttons
 const loading = document.getElementById("loading");
 const noResults = document.getElementById("noResults");
 const hamburger = document.querySelector(".hamburger");
@@ -20,13 +23,11 @@ const AOS = window.AOS;
 
 // Initialize the application when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
-  showLoading();
+  showSkeletonCards();
+  const wakeUpTimer = setTimeout(showWakeUpNotice, 3000);
 
   try {
-    // Fetch opportunities from backend API
-    const response = await fetch(
-      "https://her-horizon.onrender.com/api/opportunities"
-    );
+    const response = await fetch(`${API_BASE}/opportunities`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -39,7 +40,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     filteredOpportunities = [];
   }
 
-  // Initialize AOS (Animate On Scroll)
+  clearTimeout(wakeUpTimer);
+  hideWakeUpNotice();
+
   if (AOS) {
     AOS.init({
       duration: 800,
@@ -49,24 +52,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  hideLoading();
-
   displayOpportunities(filteredOpportunities);
   animateCounters();
+  loadTestimonies();
 
-  // Set up event listeners
   setupEventListeners();
-
-  // Set up smooth scrolling for navigation links
   setupSmoothScrolling();
-
-  // Initialize view toggle
   setupViewToggle();
-
-  // Setup newsletter form
   setupNewsletterForm();
-
-  // Setup contact form
   setupContactForm();
 });
 
@@ -76,9 +69,14 @@ function setupEventListeners() {
     searchInput.addEventListener("input", handleSearch);
   }
 
-  if (categoryFilter) {
-    categoryFilter.addEventListener("change", handleFilter);
-  }
+  document.querySelectorAll(".pill-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentFilter = btn.dataset.category;
+      document.querySelectorAll(".pill-btn").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      filterAndDisplayOpportunities();
+    });
+  });
 
   if (hamburger && navMenu) {
     hamburger.addEventListener("click", toggleMobileMenu);
@@ -101,12 +99,6 @@ function setupEventListeners() {
 // Handle search input
 function handleSearch(e) {
   currentSearch = e.target.value.toLowerCase().trim();
-  filterAndDisplayOpportunities();
-}
-
-// Handle category filter
-function handleFilter(e) {
-  currentFilter = e.target.value;
   filterAndDisplayOpportunities();
 }
 
@@ -134,25 +126,30 @@ function displayOpportunities(opportunities) {
 
   if (opportunities.length === 0) {
     showNoResults();
+    updateResultsCount(0, opportunitiesData.length);
     return;
   }
 
   hideNoResults();
+  updateResultsCount(opportunities.length, opportunitiesData.length);
 
   opportunitiesGrid.innerHTML = opportunities
     .map(
       (opportunity) => `
         <div class="opportunity-card" data-aos="fade-up">
-            <span class="opportunity-category">${opportunity.category}</span>
+            <span class="opportunity-category ${getCategoryClass(opportunity.category)}">
+              <i class="fas ${getCategoryIcon(opportunity.category)}"></i>
+              ${opportunity.category}
+            </span>
             <h3 class="opportunity-title">${opportunity.title}</h3>
             <p class="opportunity-description">${opportunity.description}</p>
             <div class="opportunity-deadline">
                 <i class="fas fa-calendar-alt"></i>
-                <span>Deadline: ${opportunity.date}</span>
+                <span>Deadline: ${formatDate(opportunity.date)}</span>
             </div>
             <a href="${opportunity.link}" target="_blank" rel="noopener noreferrer" class="apply-button">
                 <span>Apply Now</span>
-                <i class="fas fa-external-link-alt"></i>
+                <i class="fas fa-arrow-right"></i>
             </a>
         </div>
     `
@@ -450,6 +447,133 @@ function setupIntersectionObserver() {
     });
 }
 
+// Skeleton loading cards
+function showSkeletonCards(count = 6) {
+  if (!opportunitiesGrid) return;
+  opportunitiesGrid.style.display = "grid";
+  opportunitiesGrid.innerHTML = Array.from(
+    { length: count },
+    () => `
+    <div class="skeleton-card">
+      <div class="skeleton-line sk-badge"></div>
+      <div class="skeleton-line sk-title"></div>
+      <div class="skeleton-line sk-title-2"></div>
+      <div class="skeleton-line sk-desc"></div>
+      <div class="skeleton-line sk-desc-2"></div>
+      <div class="skeleton-line sk-desc-3"></div>
+      <div class="skeleton-line sk-deadline"></div>
+      <div class="skeleton-line sk-btn"></div>
+    </div>
+  `
+  ).join("");
+}
+
+// Server wake-up notice
+let wakeUpEl = null;
+
+function showWakeUpNotice() {
+  const grid = document.getElementById("opportunitiesGrid");
+  if (!grid || !grid.parentNode || wakeUpEl) return;
+  wakeUpEl = document.createElement("div");
+  wakeUpEl.className = "server-notice";
+  wakeUpEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Waking up the server — this may take up to 30 seconds on first load.`;
+  grid.parentNode.insertBefore(wakeUpEl, grid);
+}
+
+function hideWakeUpNotice() {
+  if (wakeUpEl) {
+    wakeUpEl.remove();
+    wakeUpEl = null;
+  }
+}
+
+// Results count
+function updateResultsCount(shown, total) {
+  const el = document.getElementById("resultsCount");
+  if (!el) return;
+  if (total === 0) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML =
+    shown === total
+      ? `Showing <span>${total}</span> opportunit${total === 1 ? "y" : "ies"}`
+      : `Showing <span>${shown}</span> of <span>${total}</span> opportunities`;
+}
+
+// Category helpers
+function getCategoryClass(category) {
+  const map = {
+    Education: "cat-education",
+    Skills: "cat-skills",
+    Career: "cat-career",
+    Mentorship: "cat-mentorship",
+  };
+  return map[category] || "";
+}
+
+function getCategoryIcon(category) {
+  const map = {
+    Education: "fa-graduation-cap",
+    Skills: "fa-tools",
+    Career: "fa-briefcase",
+    Mentorship: "fa-users",
+  };
+  return map[category] || "fa-star";
+}
+
+// Format date nicely
+function formatDate(dateStr) {
+  if (!dateStr) return "Open";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+// Load testimonies from API; fall back to static HTML if unavailable
+async function loadTestimonies() {
+  try {
+    const res = await fetch(`${API_BASE}/testimonies`);
+    if (!res.ok) throw new Error("API unavailable");
+    const testimonies = await res.json();
+    if (Array.isArray(testimonies) && testimonies.length > 0) {
+      renderTestimonies(testimonies);
+    }
+  } catch {
+    // keep static fallback stories already in HTML
+  }
+}
+
+function renderTestimonies(testimonies) {
+  const container = document.getElementById("storiesContainer");
+  if (!container) return;
+  container.innerHTML = testimonies
+    .map(
+      (t) => `
+    <div class="story-card">
+      <div class="story-author">
+        <img
+          src="${t.image || "images/pexels-israelzin-3724459.jpg"}"
+          alt="${t.name}"
+          class="author-avatar"
+          onerror="this.src='images/pexels-israelzin-3724459.jpg'"
+        />
+        <div class="author-info">
+          <h4>${t.name}</h4>
+          <span>${t.fieldOfStudy || ""}</span>
+        </div>
+      </div>
+      <p class="story-quote">"${t.description}"</p>
+    </div>
+  `
+    )
+    .join("");
+}
+
 // Notification styles
 const notificationStyle = document.createElement("style");
 notificationStyle.textContent = `
@@ -474,3 +598,21 @@ notificationStyle.textContent = `
   }
 `;
 document.head.appendChild(notificationStyle);
+
+// Hide page preloader and complete the top progress bar
+(function () {
+  var done = false;
+  function hideLoader() {
+    if (done) return;
+    done = true;
+    var loader = document.getElementById("pageLoader");
+    var bar = document.getElementById("topProgress");
+    if (loader) loader.classList.add("hidden");
+    if (bar) bar.classList.add("done");
+  }
+  window.addEventListener("load", function () {
+    setTimeout(hideLoader, 200);
+  });
+  // Max 2.8s fallback so slow images never trap the user on the preloader
+  setTimeout(hideLoader, 2800);
+})();
