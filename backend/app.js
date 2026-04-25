@@ -14,15 +14,13 @@ dotenv.config();
 const app = express();
 
 // Connect to MongoDB
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI environment variable is not set");
+  process.exit(1);
+}
+
 mongoose
-  .connect(
-    process.env.MONGO_URI ||
-      "mongodb+srv://dushime:rrgEw0zWMtS9iWiA@cluster0.gbi3qsl.mongodb.net/",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -31,6 +29,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+
+// Root health check — prevents "Cannot GET /" on Render
+app.get("/", (req, res) => {
+  res.json({
+    name: "HerHorizon API",
+    status: "online",
+    docs: "/api-docs",
+  });
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
