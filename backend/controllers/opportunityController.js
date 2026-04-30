@@ -2,16 +2,24 @@
 const Opportunity = require("../models/Opportunity");
 
 exports.getAllOpportunities = async (req, res) => {
-  const { category } = req.query;
-  const query = category && category !== "all" ? { category } : {};
-  const opportunities = await Opportunity.find(query);
-  res.status(200).json(opportunities);
+  try {
+    const { category } = req.query;
+    const query = category && category !== "all" ? { category } : {};
+    const opportunities = await Opportunity.find(query).lean();
+    res.status(200).json(opportunities);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch opportunities", error: err.message });
+  }
 };
 
 exports.createOpportunity = async (req, res) => {
-  const newOpportunity = new Opportunity(req.body);
-  await newOpportunity.save();
-  res.status(201).json({ message: "Opportunity created" });
+  try {
+    const newOpportunity = new Opportunity(req.body);
+    await newOpportunity.save();
+    res.status(201).json({ message: "Opportunity created", opportunity: newOpportunity });
+  } catch (err) {
+    res.status(400).json({ message: "Failed to create opportunity", error: err.message });
+  }
 };
 
 // ✅ Update Opportunity
